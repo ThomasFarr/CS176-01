@@ -1,13 +1,10 @@
-package edu.monmouth.problemset4;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+package edu.monmouth.MusicalInstrument;
 
 public class MusicalInstrument {
-	private String name = null;
-	private String type = null;
-	private int numberOfKeysorStrings = -1;
-	private double instrumentPrice = -9;
+	private String name;
+	private String type;
+	private int numberOfKeysorStrings;
+	private double instrumentPrice;
 	
 	final String UNKNOWNNAME = "UNKNOWNNAME";
 	final String UNKNOWNTYPE = "UNKNOWNTYPE";
@@ -19,58 +16,59 @@ public class MusicalInstrument {
 	
 	final double MINPRICE = 0;
 	
-	ArrayList<String> types = new ArrayList<>(Arrays.asList("woodwind", "brass", "string", "percussion", "keyboard"));
-	final static int size = 10; 
-
-	public MusicalInstrument() {
+	public MusicalInstrument() throws MusicalInstrumentException {
 		setName(UNKNOWNNAME);
 		setType(UNKNOWNTYPE);
 		setNumberOfKeysorStrings(UNKNOWNKEYSORSTRINGS);
 		setInstrumentPrice(UNKNOWNPRICE);
 	}
 	
-	public MusicalInstrument(String name, String type, int numberOfKeysorStrings) {
+	public MusicalInstrument(String name, String type, int numberOfKeysorStrings) throws MusicalInstrumentException {
+		setName(name);
+		setType(type);
+		setNumberOfKeysorStrings(numberOfKeysorStrings);
+		setInstrumentPrice(UNKNOWNPRICE);
+	}
+	
+	public MusicalInstrument(String name, String type, int numberOfKeysorStrings, double instrumentPrice) throws MusicalInstrumentException {
 		setName(name);
 		setType(type);
 		setNumberOfKeysorStrings(numberOfKeysorStrings);
 		setInstrumentPrice(instrumentPrice);
 	}
 	
-	public MusicalInstrument(String name, String type, int numberOfKeysorStrings, double instrumentPrice) {
-		setName(name);
-		setType(type);
-		setNumberOfKeysorStrings(numberOfKeysorStrings);
-		setInstrumentPrice(instrumentPrice);
+	
+	public String getName() {
+		return name.toLowerCase();
 	}
-	
-	
-		public String getName() {
-			return name.toLowerCase();
-		}
-	public void setName(String name) {
-		if (name == null || name == UNKNOWNNAME || name.length() == 0 ) {
-			this.name = UNKNOWNNAME;
-		} else {
+	public void setName(String name) throws MusicalInstrumentException {
+		if (name != null && !name.isEmpty()) {
 			this.name = name.toLowerCase();
+		} else {
+			throw new MusicalInstrumentException("Invalid name for Instrument: " + name);
 		}
 		
 	}
+	
+	
 	public String getType() {
 		return type.toLowerCase();
 	}
-	public void setType(String type) {
-		for (int x =0; x <types.size(); x++) {
-			String element = types.get(x);
-			type = type.toLowerCase();
-			if (type.equals(element)) {
+	public void setType(String type) throws MusicalInstrumentException {
+		String[] validTypes = {"woodwind", "brass", "string", "percussion", "keyboard"};
+		type = type.toLowerCase();
+		for (String validType : validTypes) {
+			if (type.equals(validType)) {
 				this.type = type;
-				break;
+				return;
 			}
 			else {
 				this.type = UNKNOWNTYPE;
 			}
 		}
+		throw new MusicalInstrumentException("Invalid type of Instrument: " +  type);
 	}
+	
 	public int getNumberOfKeysorStrings() {
 		return numberOfKeysorStrings;
 	}
@@ -94,8 +92,6 @@ public class MusicalInstrument {
 	}
 	
 	
-	ArrayList<MusicalInstrument> instrument = new ArrayList<MusicalInstrument>(size);
-
 	@Override
 	public String toString() {
 		return "[Name= " + name + ", Type= " + type + ", Keys/Strings= " + numberOfKeysorStrings
